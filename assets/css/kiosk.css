@@ -1,0 +1,18 @@
+*{margin:0;padding:0;cursor:none}
+
+body {
+    overflow: hidden;
+}
+
+video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 100;
+    transform: translateX(-50%) translateY(-50%);
+    /*transition: 1s opacity;*/
+}
