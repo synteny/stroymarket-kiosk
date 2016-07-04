@@ -12,7 +12,18 @@ video {
     min-height: 100%;
     width: auto;
     height: auto;
-    z-index: 100;
     transform: translateX(-50%) translateY(-50%);
-    /*transition: 1s opacity;*/
+    z-index: 100;
+}
+
+#adblock {
+    position: fixed;
+    top:0;
+    left:0;
+    background-color: black;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 100;
 }

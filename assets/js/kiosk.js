@@ -10,36 +10,49 @@ function readFile(url, onComplete) {
 }
 
 var video_paths = [];
+var play_index = -1;
+var play_time = 0;
+var idleTime = 0;
+var videoPlaying = false;
 
 readFile(VIDEO_PATH + '/' + VIDEO_LIST_FILENAME, data => {
-    video_paths = data.split("\n").filter(filename => filename.trim());
+    video_paths = data.split("\n").filter(filename => filename.trim()).map(filename => VIDEO_PATH + '/' + filename);
 });
 
 $(document).ready(function() {
+    var adblock = $("#adblock");
     var video = $("#video");
 
-    var idleTime = 0;
-    var videoPlaying = false;
+    adblock.css("display", "none");
 
-    video.css("display", "none");
+    function startVideo() {
+        play_time = 0;
+        toggleVideo(true);
+        nextVideo();
+    }
 
     video.on('ended', function()
     {
-        toggleVideo(false);
+        if (play_time > AD_BLOCK_DURATION) toggleVideo(false);
+        else nextVideo();
     });
+
+    function nextVideo() {
+        play_index = (play_index + 1) % video_paths.length;
+        video[0].setAttribute('src', video_paths[play_index]);
+        video[0].setAttribute('type', 'video/mp4');
+        video[0].currentTime = 0;
+        video[0].load();
+        video[0].play();
+    }
 
     function toggleVideo(visible) {
         if (visible) {
-            video.fadeIn(FADE_DURATION);
-            video[0].setAttribute('src', video_paths[0]);
-            video[0].setAttribute('type', 'video/mp4');
-            video[0].currentTime = 0;
-            video[0].load();
-            video[0].play();
+            adblock.fadeIn(FADE_DURATION);
             videoPlaying = true;
         }
         else {
-            video.fadeOut(FADE_DURATION);
+            adblock.fadeOut(FADE_DURATION);
             videoPlaying = false;
         }
     }
@@ -48,11 +61,14 @@ $(document).ready(function() {
         if (videoPlaying == false) {
             if (idleTime >= TIMEOUT) {
                 idleTime = 0;
-                toggleVideo(true);
+                startVideo();
             }
             else {
-                idleTime = idleTime + 1;
+                idleTime += 1;
             }
+        }
+        else {
+            play_time += 1;
         }
     }
 
@@ -72,5 +88,3 @@ $(document).ready(function() {
         onUserInput();
     });
 });
-
-
