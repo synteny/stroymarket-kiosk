@@ -24,6 +24,7 @@ $(document).ready(function() {
     var video = $("#video");
 
     adblock.css("display", "none");
+    video.css("display", "none");
 
     function startVideo() {
         play_time = 0;
@@ -33,8 +34,10 @@ $(document).ready(function() {
 
     video.on('ended', function()
     {
-        if (play_time > AD_BLOCK_DURATION) toggleVideo(false);
-        else nextVideo();
+        video.fadeOut(FADE_DURATION, function () {
+            if (play_time > AD_BLOCK_DURATION) toggleVideo(false);
+            else nextVideo();
+        })
     });
 
     function nextVideo() {
@@ -44,6 +47,7 @@ $(document).ready(function() {
         video[0].currentTime = 0;
         video[0].load();
         video[0].play();
+        video.fadeIn(FADE_DURATION);
     }
 
     function toggleVideo(visible) {
